@@ -1,6 +1,9 @@
-const withPrefresh = require('@prefresh/next')
+const withPrefresh = require("@prefresh/next")
 
 module.exports = withPrefresh({
+  env: {
+    API_URL: process.env.API_URL,
+  },
   webpack(config, { dev, isServer }) {
     // Move Preact into the framework chunk instead of duplicating in routes:
     const splitChunks = config.optimization && config.optimization.splitChunks
@@ -23,14 +26,14 @@ module.exports = withPrefresh({
 
     // Install webpack aliases:
     const aliases = config.resolve.alias || (config.resolve.alias = {})
-    aliases.react = aliases['react-dom'] = 'preact/compat'
+    aliases.react = aliases["react-dom"] = "preact/compat"
 
     // Automatically inject Preact DevTools:
     if (dev && !isServer) {
       const entry = config.entry
       config.entry = () =>
         entry().then((entries) => {
-          entries['main.js'] = ['preact/debug'].concat(entries['main.js'] || [])
+          entries["main.js"] = ["preact/debug"].concat(entries["main.js"] || [])
           return entries
         })
     }
